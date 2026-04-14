@@ -34,15 +34,16 @@ const Premium = () => {
 
       const { amount, keyId, currency, notes, orderId } = res.data;
 
+      //Create Razorpay Checkout options
       const options = {
-        key: keyId,
+        key: keyId, //to identify unique account
         amount,
-        currency,
+        currency, 
         name: "DevConnect Pvt Ltd",
-        description: "Connect with developers around the world",
+        description: "Connect with developers around the world", // Shown in Razorpay popup Does NOT affect payment logic
         order_id: orderId,
-        callback_url: "http://localhost:3000/payment-success",
-        prefill: {
+        callback_url: "http://localhost:3000/payment-success", //Razorpay redirects here after payment
+        prefill: { //Auto-fills user details in payment form
           name: `${notes.firstName} ${notes.lastName}`,
           email: notes.emailId,
           contact: "9999999999",
@@ -51,12 +52,12 @@ const Premium = () => {
           color: "#F37254",
         },
         handler: function () {
-          // after successful payment
+          // after successful payment does not mean verified but just complete from the ui side
           verifyPremiumUser();
         },
       };
 
-      const rzp = new window.Razorpay(options);
+      const rzp = new window.Razorpay(options); //Creates Razorpay Checkout instance Opens payment popup/modal
       rzp.open();
 
     } catch (err) {
